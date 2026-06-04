@@ -90,6 +90,25 @@ local function loadLogoAsync(imageLabel)
     end)
 end
 
+-- BLOCK ALL OTHER GUIS
+local function blockOtherGUIs()
+    local playerGui = lp.PlayerGui
+    
+    -- Disable any existing ScreenGuis that aren't ours
+    for _, child in ipairs(playerGui:GetChildren()) do
+        if child:IsA("ScreenGui") and child.Name ~= "MikkaHub" then
+            child.Enabled = false
+        end
+    end
+    
+    -- Block any new ScreenGuis from appearing
+    playerGui.ChildAdded:Connect(function(child)
+        if child:IsA("ScreenGui") and child.Name ~= "MikkaHub" then
+            child.Enabled = false
+        end
+    end)
+end
+
 local function setupUI()
     local sg = lp.PlayerGui:FindFirstChild("MikkaHub")
     if not sg then
@@ -315,6 +334,7 @@ end
 local heartbeatConn
 local function startAutoSteal()
     setupUI()
+    blockOtherGUIs()
     if heartbeatConn then return end
     heartbeatConn = RunService.Heartbeat:Connect(function()
         if isStealing then return end
