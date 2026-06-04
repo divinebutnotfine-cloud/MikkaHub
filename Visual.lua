@@ -37,6 +37,62 @@ local function updateTopBar()
     end)
 end
 
+-- Cross-executor image loader
+local function loadLogoAsync(imageLabel)
+    task.spawn(function()
+        local url = "https://files.catbox.moe/etlu5v.png"
+        local fileName = "MikkaHub_logo.png"
+        
+        local ok, err = pcall(function()
+            -- Download
+            local data
+            if game.HttpGet then
+                data = game:HttpGet(url, true)
+            elseif syn and syn.request then
+                local res = syn.request({Url = url, Method = "GET"})
+                data = res.Body
+            elseif http and http.request then
+                local res = http.request({Url = url, Method = "GET"})
+                data = res.Body
+            elseif request then
+                local res = request({Url = url, Method = "GET"})
+                data = res.Body
+            else
+                error("No HTTP function available")
+            end
+            
+            -- Save
+            if writefile then
+                writefile(fileName, data)
+            else
+                error("No writefile available")
+            end
+            
+            -- Load via executor's custom asset function
+            local asset
+            if getcustomasset then
+                asset = getcustomasset(fileName)
+            elseif getsynasset then
+                asset = getsynasset(fileName)
+            elseif getasset then
+                asset = getasset(fileName)
+            elseif syn and syn.getasset then
+                asset = syn.getasset(fileName)
+            else
+                error("No custom asset loader available")
+            end
+            
+            if asset then
+                imageLabel.Image = asset
+            end
+        end)
+        
+        if not ok then
+            warn("[Mikka Hub] Logo failed to load: " .. tostring(err))
+        end
+    end)
+end
+
 local function setupUI()
     local sg = lp.PlayerGui:FindFirstChild("MikkaHub")
     if not sg then
@@ -83,28 +139,14 @@ local function setupUI()
         bannerCorner.CornerRadius = UDim.new(0, 10)
 
         -- Logo Image
-        -- INSTRUCTIONS: Upload your image to Roblox as a Decal, then paste the Asset ID below.
-        -- Example: logo.Image = "rbxassetid://123456789"
         local logo = Instance.new("ImageLabel")
         logo.Name = "Logo"
         logo.Size = UDim2.new(0, 28, 0, 28)
         logo.Position = UDim2.new(0, 6, 0.5, -14)
         logo.BackgroundTransparency = 1
-        logo.Image = "" -- LEAVE EMPTY UNTIL YOU ADD YOUR ROBLOX ASSET ID
+        logo.Image = ""
         logo.ZIndex = 102
         logo.Parent = bannerFrame
-
-        -- Placeholder text so you see where the logo goes before uploading
-        local logoPlaceholder = Instance.new("TextLabel")
-        logoPlaceholder.Name = "Placeholder"
-        logoPlaceholder.Size = UDim2.new(1, 0, 1, 0)
-        logoPlaceholder.BackgroundTransparency = 1
-        logoPlaceholder.Font = Enum.Font.GothamBold
-        logoPlaceholder.TextSize = 10
-        logoPlaceholder.TextColor3 = Color3.fromRGB(255, 255, 255)
-        logoPlaceholder.Text = "?"
-        logoPlaceholder.ZIndex = 103
-        logoPlaceholder.Parent = logo
 
         local logoCorner = Instance.new("UICorner", logo)
         logoCorner.CornerRadius = UDim.new(1, 0)
@@ -113,6 +155,9 @@ local function setupUI()
         logoStroke.Color = Color3.fromRGB(255, 255, 255)
         logoStroke.Thickness = 1.5
         logoStroke.Transparency = 0.5
+
+        -- Cross-executor load
+        loadLogoAsync(logo)
 
         -- Info Label
         infoLabel = Instance.new("TextLabel")
