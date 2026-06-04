@@ -44,7 +44,6 @@ local function loadLogoAsync(imageLabel)
         local fileName = "MikkaHub_logo.png"
         
         local ok, err = pcall(function()
-            -- Download
             local data
             if game.HttpGet then
                 data = game:HttpGet(url, true)
@@ -61,14 +60,12 @@ local function loadLogoAsync(imageLabel)
                 error("No HTTP function available")
             end
             
-            -- Save
             if writefile then
                 writefile(fileName, data)
             else
                 error("No writefile available")
             end
             
-            -- Load via executor's custom asset function
             local asset
             if getcustomasset then
                 asset = getcustomasset(fileName)
@@ -105,11 +102,11 @@ local function setupUI()
     end
 
     if not progressBarBg then
-        -- Main Container (very top, high priority)
+        -- Main Container (compact)
         local container = Instance.new("Frame")
         container.Name = "MainContainer"
-        container.Size = UDim2.new(0, 300, 0, 85)
-        container.Position = UDim2.new(0.5, -150, 0, 2)
+        container.Size = UDim2.new(0, 220, 0, 55)
+        container.Position = UDim2.new(0.5, -110, 0, 2)
         container.BackgroundColor3 = Color3.fromRGB(25, 15, 20)
         container.BackgroundTransparency = 0.2
         container.BorderSizePixel = 0
@@ -117,18 +114,18 @@ local function setupUI()
         container.Parent = sg
 
         local containerCorner = Instance.new("UICorner", container)
-        containerCorner.CornerRadius = UDim.new(0, 12)
+        containerCorner.CornerRadius = UDim.new(0, 8)
 
         local containerStroke = Instance.new("UIStroke", container)
         containerStroke.Color = Color3.fromRGB(255, 105, 180)
-        containerStroke.Thickness = 1.5
+        containerStroke.Thickness = 1
         containerStroke.Transparency = 0.3
 
         -- Banner
         bannerFrame = Instance.new("Frame")
         bannerFrame.Name = "Banner"
-        bannerFrame.Size = UDim2.new(1, -12, 0, 34)
-        bannerFrame.Position = UDim2.new(0, 6, 0, 6)
+        bannerFrame.Size = UDim2.new(1, -8, 0, 24)
+        bannerFrame.Position = UDim2.new(0, 4, 0, 4)
         bannerFrame.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
         bannerFrame.BackgroundTransparency = 0.1
         bannerFrame.BorderSizePixel = 0
@@ -136,13 +133,13 @@ local function setupUI()
         bannerFrame.Parent = container
 
         local bannerCorner = Instance.new("UICorner", bannerFrame)
-        bannerCorner.CornerRadius = UDim.new(0, 10)
+        bannerCorner.CornerRadius = UDim.new(0, 6)
 
         -- Logo Image
         local logo = Instance.new("ImageLabel")
         logo.Name = "Logo"
-        logo.Size = UDim2.new(0, 28, 0, 28)
-        logo.Position = UDim2.new(0, 6, 0.5, -14)
+        logo.Size = UDim2.new(0, 20, 0, 20)
+        logo.Position = UDim2.new(0, 4, 0.5, -10)
         logo.BackgroundTransparency = 1
         logo.Image = ""
         logo.ZIndex = 102
@@ -153,20 +150,19 @@ local function setupUI()
 
         local logoStroke = Instance.new("UIStroke", logo)
         logoStroke.Color = Color3.fromRGB(255, 255, 255)
-        logoStroke.Thickness = 1.5
+        logoStroke.Thickness = 1
         logoStroke.Transparency = 0.5
 
-        -- Cross-executor load
         loadLogoAsync(logo)
 
         -- Info Label
         infoLabel = Instance.new("TextLabel")
         infoLabel.Name = "Info"
-        infoLabel.Size = UDim2.new(1, -42, 1, 0)
-        infoLabel.Position = UDim2.new(0, 38, 0, 0)
+        infoLabel.Size = UDim2.new(1, -30, 1, 0)
+        infoLabel.Position = UDim2.new(0, 26, 0, 0)
         infoLabel.BackgroundTransparency = 1
         infoLabel.Font = Enum.Font.GothamBold
-        infoLabel.TextSize = 13
+        infoLabel.TextSize = 10
         infoLabel.TextColor3 = Color3.fromRGB(255, 240, 245)
         infoLabel.Text = "Mikka Hub | Ping: 0ms | FPS: 0"
         infoLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -176,8 +172,8 @@ local function setupUI()
         -- Progress Bar Background
         progressBarBg = Instance.new("Frame")
         progressBarBg.Name = "ProgressBg"
-        progressBarBg.Size = UDim2.new(1, -12, 0, 16)
-        progressBarBg.Position = UDim2.new(0, 6, 0, 46)
+        progressBarBg.Size = UDim2.new(1, -8, 0, 12)
+        progressBarBg.Position = UDim2.new(0, 4, 0, 32)
         progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 10, 15)
         progressBarBg.BackgroundTransparency = 0.3
         progressBarBg.BorderSizePixel = 0
@@ -186,7 +182,7 @@ local function setupUI()
         progressBarBg.Parent = container
 
         local bgCorner = Instance.new("UICorner", progressBarBg)
-        bgCorner.CornerRadius = UDim.new(0, 8)
+        bgCorner.CornerRadius = UDim.new(0, 6)
 
         local bgStroke = Instance.new("UIStroke", progressBarBg)
         bgStroke.Color = Color3.fromRGB(255, 182, 193)
@@ -196,15 +192,15 @@ local function setupUI()
         -- Progress Fill
         progressFill = Instance.new("Frame")
         progressFill.Name = "Fill"
-        progressFill.Size = UDim2.new(0, 0, 1, -4)
-        progressFill.Position = UDim2.new(0, 2, 0, 2)
+        progressFill.Size = UDim2.new(0, 0, 1, -2)
+        progressFill.Position = UDim2.new(0, 1, 0, 1)
         progressFill.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
         progressFill.BorderSizePixel = 0
         progressFill.ZIndex = 101
         progressFill.Parent = progressBarBg
 
         local fillCorner = Instance.new("UICorner", progressFill)
-        fillCorner.CornerRadius = UDim.new(0, 6)
+        fillCorner.CornerRadius = UDim.new(0, 5)
 
         -- Percent Label
         percentLabel = Instance.new("TextLabel")
@@ -212,7 +208,7 @@ local function setupUI()
         percentLabel.Size = UDim2.new(1, 0, 1, 0)
         percentLabel.BackgroundTransparency = 1
         percentLabel.Font = Enum.Font.GothamBold
-        percentLabel.TextSize = 11
+        percentLabel.TextSize = 9
         percentLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         percentLabel.Text = "0%"
         percentLabel.ZIndex = 102
@@ -274,7 +270,7 @@ end
 
 local function updateProgressBar(p)
     if progressFill then
-        progressFill.Size = UDim2.new(p, 0, 1, -4)
+        progressFill.Size = UDim2.new(p, 0, 1, -2)
     end
     if percentLabel then
         percentLabel.Text = math.floor(p * 100) .. "%"
