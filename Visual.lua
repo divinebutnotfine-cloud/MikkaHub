@@ -44,17 +44,20 @@ local function setupUI()
         sg.Name = "MikkaHub"
         sg.ResetOnSpawn = false
         sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        sg.DisplayOrder = 999
         sg.Parent = lp.PlayerGui
     end
 
     if not progressBarBg then
-        -- Main Container
+        -- Main Container (very top, high priority)
         local container = Instance.new("Frame")
+        container.Name = "MainContainer"
         container.Size = UDim2.new(0, 300, 0, 85)
-        container.Position = UDim2.new(0.5, -150, 0, 20)
+        container.Position = UDim2.new(0.5, -150, 0, 2)
         container.BackgroundColor3 = Color3.fromRGB(25, 15, 20)
         container.BackgroundTransparency = 0.2
         container.BorderSizePixel = 0
+        container.ZIndex = 100
         container.Parent = sg
 
         local containerCorner = Instance.new("UICorner", container)
@@ -67,24 +70,41 @@ local function setupUI()
 
         -- Banner
         bannerFrame = Instance.new("Frame")
+        bannerFrame.Name = "Banner"
         bannerFrame.Size = UDim2.new(1, -12, 0, 34)
         bannerFrame.Position = UDim2.new(0, 6, 0, 6)
         bannerFrame.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
         bannerFrame.BackgroundTransparency = 0.1
         bannerFrame.BorderSizePixel = 0
+        bannerFrame.ZIndex = 101
         bannerFrame.Parent = container
 
         local bannerCorner = Instance.new("UICorner", bannerFrame)
         bannerCorner.CornerRadius = UDim.new(0, 10)
 
         -- Logo Image
+        -- INSTRUCTIONS: Upload your image to Roblox as a Decal, then paste the Asset ID below.
+        -- Example: logo.Image = "rbxassetid://123456789"
         local logo = Instance.new("ImageLabel")
         logo.Name = "Logo"
         logo.Size = UDim2.new(0, 28, 0, 28)
         logo.Position = UDim2.new(0, 6, 0.5, -14)
         logo.BackgroundTransparency = 1
-        logo.Image = "https://files.catbox.moe/etlu5v.png"
+        logo.Image = "" -- LEAVE EMPTY UNTIL YOU ADD YOUR ROBLOX ASSET ID
+        logo.ZIndex = 102
         logo.Parent = bannerFrame
+
+        -- Placeholder text so you see where the logo goes before uploading
+        local logoPlaceholder = Instance.new("TextLabel")
+        logoPlaceholder.Name = "Placeholder"
+        logoPlaceholder.Size = UDim2.new(1, 0, 1, 0)
+        logoPlaceholder.BackgroundTransparency = 1
+        logoPlaceholder.Font = Enum.Font.GothamBold
+        logoPlaceholder.TextSize = 10
+        logoPlaceholder.TextColor3 = Color3.fromRGB(255, 255, 255)
+        logoPlaceholder.Text = "?"
+        logoPlaceholder.ZIndex = 103
+        logoPlaceholder.Parent = logo
 
         local logoCorner = Instance.new("UICorner", logo)
         logoCorner.CornerRadius = UDim.new(1, 0)
@@ -96,6 +116,7 @@ local function setupUI()
 
         -- Info Label
         infoLabel = Instance.new("TextLabel")
+        infoLabel.Name = "Info"
         infoLabel.Size = UDim2.new(1, -42, 1, 0)
         infoLabel.Position = UDim2.new(0, 38, 0, 0)
         infoLabel.BackgroundTransparency = 1
@@ -104,16 +125,19 @@ local function setupUI()
         infoLabel.TextColor3 = Color3.fromRGB(255, 240, 245)
         infoLabel.Text = "Mikka Hub | Ping: 0ms | FPS: 0"
         infoLabel.TextXAlignment = Enum.TextXAlignment.Left
+        infoLabel.ZIndex = 102
         infoLabel.Parent = bannerFrame
 
         -- Progress Bar Background
         progressBarBg = Instance.new("Frame")
+        progressBarBg.Name = "ProgressBg"
         progressBarBg.Size = UDim2.new(1, -12, 0, 16)
         progressBarBg.Position = UDim2.new(0, 6, 0, 46)
         progressBarBg.BackgroundColor3 = Color3.fromRGB(20, 10, 15)
         progressBarBg.BackgroundTransparency = 0.3
         progressBarBg.BorderSizePixel = 0
         progressBarBg.Visible = true
+        progressBarBg.ZIndex = 100
         progressBarBg.Parent = container
 
         local bgCorner = Instance.new("UICorner", progressBarBg)
@@ -126,10 +150,12 @@ local function setupUI()
 
         -- Progress Fill
         progressFill = Instance.new("Frame")
+        progressFill.Name = "Fill"
         progressFill.Size = UDim2.new(0, 0, 1, -4)
         progressFill.Position = UDim2.new(0, 2, 0, 2)
         progressFill.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
         progressFill.BorderSizePixel = 0
+        progressFill.ZIndex = 101
         progressFill.Parent = progressBarBg
 
         local fillCorner = Instance.new("UICorner", progressFill)
@@ -137,12 +163,14 @@ local function setupUI()
 
         -- Percent Label
         percentLabel = Instance.new("TextLabel")
+        percentLabel.Name = "Percent"
         percentLabel.Size = UDim2.new(1, 0, 1, 0)
         percentLabel.BackgroundTransparency = 1
         percentLabel.Font = Enum.Font.GothamBold
         percentLabel.TextSize = 11
         percentLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         percentLabel.Text = "0%"
+        percentLabel.ZIndex = 102
         percentLabel.Parent = progressBarBg
 
         updateTopBar()
